@@ -1,0 +1,67 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/data/jpa
+                           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+                           http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="co.*" />
+	<!-- Cargamos los repositorios Spring Data -->
+	<jpa:repositories
+		base-package="co.com.samtel.ControlAccesos.repository" />
+
+	<!-- Configuracion del Datasource en servidor -->
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+	<!-- <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/> -->
+	<!-- <property name="url" value="jdbc:mysql://192.165.30.247:3306/controlacceso"/> -->
+	<!-- <property name="username" value="ubuntu"/> -->
+	<!-- <property name="password" value="ubuntu"/> -->
+	<!-- </bean> -->
+
+	<!-- Configuracion del Datasource local -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/controlacceso?useSSL=false&amp;serverTimezone=UTC&amp;autoReconnect=true&amp;maxReconnects=1500 " />
+		<property name="username" value="samtel" />
+		<property name="password" value="samtel" />
+	</bean>
+
+	<!-- Provedor de persistencia seleccionado. -->
+	<bean id="jpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="showSql" value="true" />
+		<property name="generateDdl" value="true" />
+		<property name="database" value="MYSQL" />
+
+
+	</bean>
+
+	<!-- Entity Manager Factory -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+
+
+		<!-- Paquete donde se encuentran las entidades -->
+		<property name="packagesToScan"
+			value="co.com.samtel.ControlAccesos.entities" />
+	</bean>
+
+
+	<!-- Transaction Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory" />
+	</bean>
+	<context:component-scan
+		base-package="co.com.samtel" />
+</beans>
